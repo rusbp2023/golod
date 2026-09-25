@@ -3,468 +3,400 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Olvasás és szógyűjtés — orosz szöveg</title>
+<title>Голод. Нетолстый роман — Светлана Олеговна Павлова</title>
 <style>
-  :root{
-    --bg: #14171a;
-    --panel: #1c2024;
-    --panel-line: #2b3136;
-    --ink: #e7e3d8;
-    --ink-dim: #a9ada6;
-    --muted: #74797f;
-    --accent: #8fb3c9;
-    --accent-ink: #10161a;
-    --accent-soft: rgba(143,179,201,0.14);
-    --serif: Georgia, "Times New Roman", "Noto Serif", serif;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
+:root{
+  --bg: #14171a;
+  --panel: #1c2024;
+  --panel-line: #2b3136;
+  --ink: #e7e3d8;
+  --ink-dim: #a9ada6;
+  --muted: #74797f;
+  --accent: #8fb3c9;
+  --accent-ink: #10161a;
+  --accent-soft: rgba(143,179,201,0.14);
+  --serif: Georgia, "Times New Roman", "Noto Serif", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+}
 
-  * { box-sizing: border-box; }
+/* ---- fixed title, always visible top-left ---- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  padding: 16px 20px 22px 20px;
+  background: linear-gradient(180deg, rgba(20,23,26,0.97) 55%, rgba(20,23,26,0));
+  pointer-events: none;
+}
+.site-header .author {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--ink-dim);
+  margin: 0;
+  pointer-events: auto;
+}
+.site-header .book-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--accent);
+  margin: 3px 0 0 0;
+  pointer-events: auto;
+}
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-  }
+.header-spacer { height: 78px; }
 
-  .page {
-    display: grid;
-    grid-template-columns: 1fr 460px;
-    min-height: 100vh;
-  }
+/* ---- table of contents ---- */
+.toc-view {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 64px 24px;
+}
+.toc-inner {
+  max-width: 760px;
+  width: 100%;
+}
+.toc-heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--ink-dim);
+  margin: 8px 0 28px 0;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.toc-item {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14.5px;
+  padding: 14px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.toc-item:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.toc-item.has-text {
+  color: var(--accent);
+}
 
-  @media (max-width: 860px) {
-    .page { grid-template-columns: 1fr; }
-    .list-panel { border-left: none; border-top: 1px solid var(--panel-line); }
-  }
+/* ---- reader layout ---- */
+.reader-view { display: none; }
+.page {
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  min-height: 100vh;
+}
+@media (max-width: 860px) {
+  .page { grid-template-columns: 1fr; }
+  .list-panel { border-left: none; border-top: 1px solid var(--panel-line); }
+}
 
-  /* ---- left: reading panel ---- */
-  .read-panel {
-    padding: 64px 48px 64px 56px;
-    display: flex;
-    justify-content: center;
-  }
+.read-panel {
+  padding: 96px 48px 64px 56px;
+  display: flex;
+  justify-content: center;
+}
+.read-inner {
+  max-width: 620px;
+  width: 100%;
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  margin: 0 0 18px 0;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.back-link:hover { color: var(--accent); }
+.eyebrow {
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  margin: 0 0 6px 0;
+}
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--ink-dim);
+  margin: 0 0 32px 0;
+}
+.text {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.85;
+  color: var(--ink);
+  margin: 0 0 22px 0;
+  text-indent: 2em;
+}
+.word {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 1px 2px;
+  margin: 0 -2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.word:hover { background: var(--accent-soft); }
+.word.active { background: var(--accent); color: var(--accent-ink); }
 
-  .read-inner {
-    max-width: 620px;
-    width: 100%;
-  }
+/* ---- audio player ---- */
+.player-spacer { height: 92px; }
+.audio-player {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: calc(100% - 460px);
+  background: rgba(20, 23, 26, 0.92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--panel-line);
+  padding: 16px 48px 16px 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 10;
+}
+@media (max-width: 860px) {
+  .audio-player { width: 100%; padding: 14px 20px; }
+}
+.player-title {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  margin: 0 4px 0 0;
+  min-width: 64px;
+}
+.player-btn {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: none;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  padding: 0;
+}
+.player-btn:hover { opacity: 0.88; }
+.player-skip {
+  background: none;
+  border: none;
+  color: var(--ink-dim);
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-family: var(--sans);
+  padding: 0;
+  line-height: 1.1;
+}
+.player-skip:hover { color: var(--ink); background: var(--panel-line); }
+.player-time {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-dim);
+  min-width: 38px;
+  text-align: center;
+  white-space: nowrap;
+}
+.player-track {
+  position: relative;
+  flex: 1;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.player-track-bg {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: var(--panel-line);
+  border-radius: 2px;
+  overflow: visible;
+}
+.player-track-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.player-track-head {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 2px;
+  height: 16px;
+  background: var(--ink);
+  transform: translate(-1px, -50%);
+  border-radius: 1px;
+  pointer-events: none;
+}
 
-  .eyebrow {
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    margin: 0 0 6px 0;
-  }
-
-  .heading {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 22px;
-    color: var(--ink-dim);
-    margin: 0 0 40px 0;
-  }
-
-  .text {
-    font-family: var(--serif);
-    font-size: 22px;
-    line-height: 1.85;
-    color: var(--ink);
-    margin: 0;
-    text-indent: 2em;
-  }
-
-  .word {
-    cursor: pointer;
-    border-radius: 3px;
-    padding: 1px 2px;
-    margin: 0 -2px;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
-
-  .word:hover {
-    background: var(--accent-soft);
-  }
-
-  .word.active {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-
-  .hint {
-    margin: 0 0 32px 0;
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .chapter-divider {
-    border: none;
-    border-top: 1px solid var(--panel-line);
-    margin: 48px 0 24px 0;
-  }
-
-  /* ---- audio player (stays visible while scrolling) ---- */
-  .player-spacer {
-    height: 92px;
-  }
-
-  .audio-player {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: calc(100% - 460px);
-    background: rgba(20, 23, 26, 0.92);
-    backdrop-filter: blur(6px);
-    border-top: 1px solid var(--panel-line);
-    padding: 16px 48px 16px 56px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    z-index: 10;
-  }
-
-  @media (max-width: 860px) {
-    .audio-player { width: 100%; padding: 14px 20px; }
-  }
-
-  .player-title {
-    font-family: var(--sans);
-    font-size: 12.5px;
-    color: var(--muted);
-    white-space: nowrap;
-    margin: 0 4px 0 0;
-    min-width: 64px;
-  }
-
-  .player-btn {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border: none;
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    padding: 0;
-  }
-
-  .player-btn:hover {
-    opacity: 0.88;
-  }
-
-  .player-skip {
-    background: none;
-    border: none;
-    color: var(--ink-dim);
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-family: var(--sans);
-    padding: 0;
-    line-height: 1.1;
-  }
-
-  .player-skip:hover {
-    color: var(--ink);
-    background: var(--panel-line);
-  }
-
-  .player-time {
-    font-family: var(--sans);
-    font-size: 12px;
-    color: var(--ink-dim);
-    min-width: 38px;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .player-track {
-    position: relative;
-    flex: 1;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .player-track-bg {
-    position: relative;
-    width: 100%;
-    height: 4px;
-    background: var(--panel-line);
-    border-radius: 2px;
-    overflow: visible;
-  }
-
-  .player-track-fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 0%;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  .player-track-head {
-    position: absolute;
-    top: 50%;
-    left: 0%;
-    width: 2px;
-    height: 16px;
-    background: var(--ink);
-    transform: translate(-1px, -50%);
-    border-radius: 1px;
-    pointer-events: none;
-  }
-
-  /* ---- right: word list panel ---- */
-  .list-panel {
-    background: var(--panel);
-    border-left: 1px solid var(--panel-line);
-    padding: 48px 32px;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-
-  .list-title {
-    font-family: var(--sans);
-    font-size: 15px;
-    color: var(--ink);
-    margin: 0 0 4px 0;
-  }
-
-  .list-count {
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--muted);
-    margin: 0 0 28px 0;
-  }
-
-  .empty {
-    font-family: var(--sans);
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--muted);
-    max-width: 240px;
-  }
-
-  .entries-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
-
-  .entries-table col.col-ru { width: 42%; }
-  .entries-table col.col-hu { width: 48%; }
-  .entries-table col.col-remove { width: 10%; }
-
-  .entries-table td {
-    padding: 14px 8px;
-    border-bottom: 1px solid var(--panel-line);
-    vertical-align: top;
-  }
-
-  .entries-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  .entry-ru {
-    font-family: var(--sans);
-    font-size: 17px;
-    color: var(--accent);
-    margin: 0 0 6px 0;
-    word-wrap: break-word;
-  }
-
-  .entry-aspect {
-    font-family: var(--sans);
-    font-size: 12px;
-    color: var(--ink-dim);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .entry-hu {
-    font-family: var(--sans);
-    font-size: 14.5px;
-    color: var(--ink);
-    margin: 0;
-    line-height: 1.5;
-    word-wrap: break-word;
-  }
-
-  .entry-remove {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 17px;
-    line-height: 1;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 3px;
-  }
-
-  .entry-remove:hover {
-    color: var(--ink);
-    background: var(--panel-line);
-  }
+/* ---- right: word list panel ---- */
+.list-panel {
+  background: var(--panel);
+  border-left: 1px solid var(--panel-line);
+  padding: 96px 32px 48px 32px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.list-title {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0 0 4px 0;
+}
+.list-count {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 28px 0;
+}
+.empty {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 240px;
+}
+.entries-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.entries-table col.col-ru { width: 42%; }
+.entries-table col.col-hu { width: 48%; }
+.entries-table col.col-remove { width: 10%; }
+.entries-table td {
+  padding: 14px 8px;
+  border-bottom: 1px solid var(--panel-line);
+  vertical-align: top;
+}
+.entries-table tr:last-child td { border-bottom: none; }
+.entry-ru {
+  font-family: var(--sans);
+  font-size: 17px;
+  color: var(--accent);
+  margin: 0 0 6px 0;
+  word-wrap: break-word;
+}
+.entry-aspect {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-line;
+}
+.entry-hu {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+.entry-remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.entry-remove:hover { color: var(--ink); background: var(--panel-line); }
 </style>
 </head>
 <body>
 
-<div class="page">
+<div class="site-header">
+  <p class="author">Светлана Олеговна Павлова</p>
+  <p class="book-title">Голод. Нетолстый роман</p>
+</div>
 
-  <div class="read-panel">
-    <div class="read-inner">
-      <p class="eyebrow">Olvasógyakorlat</p>
-      <h1 class="heading">Kattints egy szóra a szótári alakért</h1>
+<!-- ================= TARTALOMJEGYZÉK (kezdőlap) ================= -->
+<div class="toc-view" id="tocView">
+  <div class="header-spacer"></div>
+  <div class="toc-inner">
+    <p class="eyebrow">Tartalomjegyzék</p>
+    <h1 class="toc-heading">Válassz egy részt az olvasáshoz</h1>
+    <div class="toc-grid" id="tocGrid"></div>
+  </div>
+</div>
 
-      <p class="hint">Kattints egy szóra, hogy hozzáadd a jobb oldali listához. Ugyanarra a szóra újra kattintva eltávolítod onnan.</p>
-
-<div class="chapter" data-audio="audio/fejezet-1.mp3" data-title="1. fejezet">
-        <div id="text">
-          <p class="text">
-            <span class="word" data-key="я">Я</span> <span class="word" data-key="лежу">лежу</span> <span class="word" data-key="на">на</span> <span class="word" data-key="полу">полу</span>, <span class="word" data-key="ноги">ноги</span> <span class="word" data-key="задраны">задраны</span> <span class="word" data-key="на">на</span> <span class="word" data-key="стену">стену</span>. <span class="word" data-key="где-то">Где-то</span> <span class="word" data-key="писали">писали</span>, <span class="word" data-key="что">что</span> <span class="word" data-key="так">так</span> <span class="word" data-key="сходят">сходят</span> <span class="word" data-key="отёки">отёки</span>, <span class="word" data-key="а">а</span> <span class="word" data-key="значит">значит</span>, <span class="word" data-key="лишние">лишние</span> <span class="word" data-key="объёмы">объёмы</span>. <span class="word" data-key="я">Я</span> <span class="word" data-key="смотрю">смотрю</span> <span class="word" data-key="в">в</span> <span class="word" data-key="потолок">потолок</span> <span class="word" data-key="и">и</span> <span class="word" data-key="надеюсь">надеюсь</span>, <span class="word" data-key="что">что</span> <span class="word" data-key="как">как</span> <span class="word" data-key="только">только</span> <span class="word" data-key="объёмы">объёмы</span> <span class="word" data-key="уйдут">уйдут</span>, <span class="word" data-key="придут">придут</span> <span class="word" data-key="красота">красота</span>, <span class="word" data-key="счастье">счастье</span>, <span class="word" data-key="уверенность">уверенность</span> <span class="word" data-key="в">в</span> <span class="word" data-key="себе">себе</span>. <span class="word" data-key="достойная">Достойная</span> <span class="word" data-key="нормальная">нормальная</span> <span class="word" data-key="жизнь">жизнь</span>.
-          </p>
-
-          <p class="text">
-            <span class="word" data-key="я">Я</span> <span class="word" data-key="тянусь">тянусь</span> <span class="word" data-key="к">к</span> <span class="word" data-key="телефону">телефону</span> <span class="word" data-key="и">и</span> <span class="word" data-key="скроллю">скроллю</span> <span class="word" data-key="в">в</span> <span class="word" data-key="приложении">приложении</span>, <span class="word" data-key="чаще">чаще</span> <span class="word" data-key="которого">которого</span> <span class="word" data-key="захожу">захожу</span> <span class="word" data-key="разве">разве</span> <span class="word" data-key="что">что</span> <span class="word" data-key="в">в</span> <span class="word" data-key="рабочую">рабочую</span> <span class="word" data-key="почту">почту</span>. <span class="word" data-key="я">Я</span> <span class="word" data-key="делаю">делаю</span> <span class="word" data-key="заказ">заказ</span>. <span class="word" data-key="это">Это</span> <span class="word" data-key="действие">действие</span> <span class="word" data-key="я">я</span> <span class="word" data-key="совершаю">совершаю</span> <span class="word" data-key="каждый">каждый</span> <span class="word" data-key="раз">раз</span>, <span class="word" data-key="когда">когда</span> <span class="word" data-key="пустота">пустота</span> <span class="word" data-key="пожирает">пожирает</span> <span class="word" data-key="меня">меня</span> <span class="word" data-key="изнутри">изнутри</span>, <span class="word" data-key="и">и</span> <span class="word" data-key="пустоту">пустоту</span> <span class="word" data-key="эту">эту</span> <span class="word" data-key="хочется">хочется</span> <span class="word" data-key="кем-нибудь">кем-нибудь</span> <span class="word" data-key="заполнить">заполнить</span>, <span class="word" data-key="только">только</span> <span class="word" data-key="вот">вот</span> <span class="word" data-key="некем">некем</span> <span class="word" data-key="же">же</span>, <span class="word" data-key="некем">некем</span> <span class="word" data-key="совсем">совсем</span>. <span class="word" data-key="кем-нибудь">Кем-нибудь</span> <span class="word" data-key="не">не</span> <span class="word" data-key="получится">получится</span>; <span class="word" data-key="получится">получится</span> <span class="word" data-key="чем-нибудь">чем-нибудь</span>.
-          </p>
-
-          <p class="text">
-            <span class="word" data-key="я">Я</span> <span class="word" data-key="делаю">делаю</span> <span class="word" data-key="вдох">вдох</span> <span class="word" data-key="и">и</span> <span class="word" data-key="начинаю">начинаю</span> <span class="word" data-key="считать">считать</span> <span class="word" data-key="про">про</span> <span class="word" data-key="себя">себя</span>.
-          </p>
-
-          <p class="text">
-            <span class="word" data-key="сейчас">Сейчас</span> <span class="word" data-key="всё">всё</span> <span class="word" data-key="наладится">наладится</span>.
-          </p>
-
-<p class="text">
-  <span class="word" data-key="Тем">Тем</span> <span class="word" data-key="временем">временем</span> <span class="word" data-key="летит">летит</span> <span class="word" data-key="по">по</span> <span class="word" data-key="Тверской">Тверской</span> <span class="word" data-key="курьер">курьер</span> <span class="word" data-key="Санжар">Санжар</span>. <span class="word" data-key="Наверное">Наверное</span>, <span class="word" data-key="он">он</span> <span class="word" data-key="уже">уже</span> <span class="word" data-key="запомнил">запомнил</span> <span class="word" data-key="меня">меня</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Это">Это</span> <span class="word" data-key="несложно">несложно</span>: <span class="word" data-key="розовая">розовая</span> <span class="word" data-key="пижама">пижама</span>, <span class="word" data-key="красные">красные</span> <span class="word" data-key="ногти">ногти</span>, <span class="word" data-key="торопливый">торопливый</span> <span class="word" data-key="хват">хват</span>, <span class="word" data-key="100">100</span> <span class="word" data-key="рублей">рублей</span> <span class="word" data-key="чаевых">чаевых</span>; <span class="word" data-key="всегда">всегда</span> <span class="word" data-key="ближе">ближе</span> <span class="word" data-key="к">к</span> <span class="word" data-key="ночи">ночи</span>, <span class="word" data-key="всегда">всегда</span> <span class="word" data-key="грузинский">грузинский</span> <span class="word" data-key="ресторан">ресторан</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Как-то">Как-то</span> <span class="word" data-key="он">он</span> <span class="word" data-key="приезжал">приезжал</span> <span class="word" data-key="дважды">дважды</span> <span class="word" data-key="за">за</span> <span class="word" data-key="вечер">вечер</span>. <span class="word" data-key="За">За</span> <span class="word" data-key="тот">тот</span> <span class="word" data-key="случай">случай</span> <span class="word" data-key="мне">мне</span> <span class="word" data-key="особенно">особенно</span> <span class="word" data-key="стыдно">стыдно</span>; <span class="word" data-key="надеюсь">надеюсь</span>, <span class="word" data-key="Санжар">Санжар</span> <span class="word" data-key="списал">списал</span> <span class="word" data-key="это">это</span> <span class="word" data-key="на">на</span> <span class="word" data-key="мою">мою</span> <span class="word" data-key="рассеянность">рассеянность</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="С">С</span> <span class="word" data-key="другой">другой</span> <span class="word" data-key="стороны">стороны</span> <span class="word" data-key="Тверской">Тверской</span> <span class="word" data-key="выезжает">выезжает</span> <span class="word" data-key="второй">второй</span> <span class="word" data-key="курьер">курьер</span> – <span class="word" data-key="Хушруз">Хушруз</span>. <span class="word" data-key="У">У</span> <span class="word" data-key="него">него</span> <span class="word" data-key="в">в</span> <span class="word" data-key="рюкзаке">рюкзаке</span> <span class="word" data-key="три">три</span> <span class="word" data-key="пачки">пачки</span> <span class="word" data-key="вафель">вафель</span>, <span class="word" data-key="ведро">ведро</span> <span class="word" data-key="мороженого">мороженого</span>, <span class="word" data-key="кило">кило</span> <span class="word" data-key="халвы">халвы</span>, <span class="word" data-key="арахисовая">арахисовая</span> <span class="word" data-key="паста">паста</span>, <span class="word" data-key="орешки">орешки</span> <span class="word" data-key="со">со</span> <span class="word" data-key="сгущёнкой">сгущёнкой</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="И">И</span> <span class="word" data-key="вот">вот</span> <span class="word" data-key="они">они</span> <span class="word" data-key="летят">летят</span> <span class="word" data-key="навстречу">навстречу</span> <span class="word" data-key="друг">друг</span> <span class="word" data-key="другу">другу</span>, <span class="word" data-key="два">два</span> <span class="word" data-key="велосипедиста">велосипедиста</span>: <span class="word" data-key="один">один</span> – <span class="word" data-key="из">из</span> <span class="word" data-key="точки">точки</span> <span class="word" data-key="А">А</span>, <span class="word" data-key="второй">второй</span> – <span class="word" data-key="из">из</span> <span class="word" data-key="точки">точки</span> <span class="word" data-key="B">B</span> <span class="word" data-key="с">с</span> <span class="word" data-key="местом">местом</span> <span class="word" data-key="встречи">встречи</span> <span class="word" data-key="в">в</span> <span class="word" data-key="точке">точке</span> <span class="word" data-key="С">С</span> – <span class="word" data-key="моей">моей</span>, <span class="word" data-key="то">то</span> <span class="word" data-key="есть">есть</span>, <span class="word" data-key="квартире">квартире</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Звонок">Звонок</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="подлетаю">подлетаю</span> <span class="word" data-key="к">к</span> <span class="word" data-key="двери">двери</span>, <span class="word" data-key="дёргаю">дёргаю</span> <span class="word" data-key="её">её</span> <span class="word" data-key="на">на</span> <span class="word" data-key="себя">себя</span>, <span class="word" data-key="ни">ни</span> <span class="word" data-key="здрасьте">«здрасьте»</span>, <span class="word" data-key="ни">ни</span> <span class="word" data-key="до">«до</span> <span class="word" data-key="свидания">свидания»</span>, <span class="word" data-key="хватаю">хватаю</span> <span class="word" data-key="пакет">пакет</span>. <span class="word" data-key="Конечно">Конечно</span> <span class="word" data-key="же">же</span>, <span class="word" data-key="сладкое">сладкое</span> <span class="word" data-key="приехало">приехало</span> <span class="word" data-key="первым">первым</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="От">От</span> <span class="word" data-key="негодования">негодования</span> <span class="word" data-key="я">я</span> <span class="word" data-key="почти">почти</span> <span class="word" data-key="рычу">рычу</span> <span class="word" data-key="как">как</span> <span class="word" data-key="зверь">зверь</span>. <span class="word" data-key="Ждать">Ждать</span> <span class="word" data-key="невыносимо">невыносимо</span>; <span class="word" data-key="значок">значок</span> <span class="word" data-key="курьера">курьера</span>, <span class="word" data-key="разумеется">разумеется</span>, <span class="word" data-key="недвижим">недвижим</span> <span class="word" data-key="на">на</span> <span class="word" data-key="карте">карте</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="окончательно">окончательно</span> <span class="word" data-key="сатанею">сатанею</span> <span class="word" data-key="и">и</span> <span class="word" data-key="строчу">строчу</span> <span class="word" data-key="гневное">гневное</span> <span class="word" data-key="сообщение">сообщение</span> <span class="word" data-key="в">в</span> <span class="word" data-key="саппорт">саппорт</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Повторная">Повторная</span> <span class="word" data-key="трель">трель</span> <span class="word" data-key="звонка">звонка</span> <span class="word" data-key="спасает">спасает</span> <span class="word" data-key="оператора">оператора</span> <span class="word" data-key="поддержки">поддержки</span> <span class="word" data-key="Василия">Василия</span>: <span class="word" data-key="претензия">претензия</span> <span class="word" data-key="отменена">отменена</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="представляю">представляю</span>, <span class="word" data-key="как">как</span> <span class="word" data-key="Василий">Василий</span> <span class="word" data-key="с">с</span> <span class="word" data-key="облегчением">облегчением</span> <span class="word" data-key="выдыхает">выдыхает</span> <span class="word" data-key="и">и</span> <span class="word" data-key="идёт">идёт</span> <span class="word" data-key="заваривать">заваривать</span> <span class="word" data-key="кофе">кофе</span> <span class="word" data-key="симпатичной">симпатичной</span> <span class="word" data-key="коллеге">коллеге</span> <span class="word" data-key="по">по</span> <span class="word" data-key="ночной">ночной</span> <span class="word" data-key="смене">смене</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="На">На</span> <span class="word" data-key="другом">другом</span> <span class="word" data-key="конце">конце</span> <span class="word" data-key="ЦАО">ЦАО</span> <span class="word" data-key="завязывается">завязывается</span> <span class="word" data-key="необременительный">необременительный</span> <span class="word" data-key="служебный">служебный</span> <span class="word" data-key="роман">роман</span>.
-</p>
-
-<!-- A részletes önkárosító viselkedést leíró szakasz kihagyva. -->
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="залезаю">залезаю</span> <span class="word" data-key="под">под</span> <span class="word" data-key="душ">душ</span>. <span class="word" data-key="Сердце">Сердце</span>, <span class="word" data-key="ещё">ещё</span> <span class="word" data-key="не">не</span> <span class="word" data-key="отошедшее">отошедшее</span> <span class="word" data-key="от">от</span> <span class="word" data-key="страха">страха</span>, <span class="word" data-key="бьётся">бьётся</span> <span class="word" data-key="сильнее">сильнее</span> <span class="word" data-key="обычного">обычного</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Это">Это</span> <span class="word" data-key="всё">всё</span> <span class="word" data-key="было">было</span> <span class="word" data-key="сейчас">сейчас</span> – <span class="word" data-key="незачем">незачем</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Это">Это</span> <span class="word" data-key="всё">всё</span> <span class="word" data-key="растворилось">растворилось</span> <span class="word" data-key="во">во</span> <span class="word" data-key="Вселенной">Вселенной</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Нулевый">Нулевый</span> <span class="word" data-key="выхлоп">выхлоп</span>, <span class="word" data-key="никакого">никакого</span> <span class="word" data-key="КПД">КПД</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="выхожу">выхожу</span> <span class="word" data-key="из">из</span> <span class="word" data-key="душа">душа</span>, <span class="word" data-key="с">с</span> <span class="word" data-key="усилием">усилием</span> <span class="word" data-key="вытираюсь">вытираюсь</span>, <span class="word" data-key="подхожу">подхожу</span> <span class="word" data-key="к">к</span> <span class="word" data-key="зеркалу">зеркалу</span> <span class="word" data-key="в">в</span> <span class="word" data-key="коридоре">коридоре</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Осмеливаюсь">Осмеливаюсь</span> <span class="word" data-key="посмотреть">посмотреть</span> <span class="word" data-key="прямо">прямо</span> <span class="word" data-key="в">в</span> <span class="word" data-key="упор">упор</span> <span class="word" data-key="на">на</span> <span class="word" data-key="своё">своё</span> <span class="word" data-key="тело">тело</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="В">В</span> <span class="word" data-key="голове">голове</span> <span class="word" data-key="бьются">бьются</span> <span class="word" data-key="слова">слова</span>: <span class="word" data-key="жирная">«жирная»</span>, <span class="word" data-key="туша">«туша»</span>, <span class="word" data-key="мразь">«мразь»</span>, <span class="word" data-key="ненавижу">«ненавижу»</span>, <span class="word" data-key="чудовище">«чудовище»</span>, <span class="word" data-key="рыхлость">«рыхлость»</span>, <span class="word" data-key="обвисло">«обвисло»</span>, <span class="word" data-key="толстуха">«толстуха»</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Я">Я</span> <span class="word" data-key="плачу">плачу</span>, <span class="word" data-key="ведь">ведь</span> <span class="word" data-key="меня">меня</span> <span class="word" data-key="никто">никто</span> <span class="word" data-key="не">не</span> <span class="word" data-key="любит">любит</span>.
-</p>
-
-<p class="text">
-  <span class="word" data-key="Даже">Даже</span> <span class="word" data-key="я">я</span> <span class="word" data-key="сама">сама</span>.
-</p>
-
-
-        </div>
-
-        <hr class="chapter-divider">
+<!-- ================= OLVASÓ NÉZET ================= -->
+<div class="reader-view" id="readerView">
+  <div class="page">
+    <div class="read-panel">
+      <div class="read-inner">
+        <button class="back-link" id="backBtn">← Tartalomjegyzék</button>
+        <p class="eyebrow" id="chapterEyebrow">Olvasógyakorlat</p>
+        <h1 class="heading">Kattints egy szóra a szótári alakért</h1>
+        <div id="text"></div>
+        <div class="player-spacer"></div>
       </div>
+    </div>
 
-      <!--
-        Új fejezet hozzáadásához másold ezt a blokkot:
-        <div class="chapter" data-audio="audio/fejezet-2.mp3" data-title="2. fejezet">
-          <div id="text">... új bekezdések ...</div>
-          <hr class="chapter-divider">
-        </div>
-        A lejátszó automatikusan az éppen a képernyőn legnagyobb helyet foglaló
-        fejezetre vált (data-audio / data-title alapján).
-      -->
-
-      <div class="player-spacer"></div>
+    <div class="list-panel">
+      <p class="list-title">Szólista</p>
+      <p class="list-count" id="count">0 szó kiválasztva</p>
+      <div id="listArea">
+        <p class="empty" id="emptyMsg">Még nincs kiválasztott szó. Kattints a szövegben bármelyik szóra.</p>
+        <table class="entries-table">
+          <colgroup>
+            <col class="col-ru"><col class="col-hu"><col class="col-remove">
+          </colgroup>
+          <tbody id="entries"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <audio id="chapterAudio" preload="metadata"></audio>
-
   <div class="audio-player">
-    <p class="player-title" id="playerTitle">1. fejezet</p>
+    <p class="player-title" id="playerTitle">1. rész</p>
     <button class="player-skip" id="skipBackBtn" aria-label="10 másodperc vissza">−10</button>
     <button class="player-btn" id="playBtn" aria-label="Lejátszás">▶</button>
     <button class="player-skip" id="skipFwdBtn" aria-label="10 másodperc előre">+10</button>
@@ -475,302 +407,549 @@
         <div class="player-track-head" id="trackHead"></div>
       </div>
     </div>
-        <span class="player-time" id="durationTime">0:00</span>
+    <span class="player-time" id="durationTime">0:00</span>
   </div>
-
-  <div class="list-panel">
-    <p class="list-title">Szólista</p>
-    <p class="list-count" id="count">0 szó kiválasztva</p>
-    <div id="listArea">
-      <p class="empty" id="emptyMsg">Még nincs kiválasztott szó. Kattints a szövegben bármelyik szóra a bal oldalon.</p>
-      <table class="entries-table">
-        <colgroup>
-          <col class="col-ru">
-          <col class="col-hu">
-          <col class="col-remove">
-        </colgroup>
-        <tbody id="entries"></tbody>
-      </table>
-    </div>
-  </div>
-
 </div>
 
 <script>
-  // orosz szó -> { form (a szövegbeli alak hangsúllyal), lemma (hangsúllyal),
-  //                aspect: {impf, perf} (csak igéknél, hangsúllyal), hu }
-  // A hangsúlyos magánhangzót ́ jel (kombináló ékezet) követi.
-  const dict = {
-    "я":            { form: "я",            lemma: "я",            hu: "én" },
-    "лежу":         { form: "лежу́",         lemma: "лежа́ть",       aspect: { impf: "лежа́ть", perf: "полежа́ть" }, hu: "fekszik" },
-    "на":           { form: "на",           lemma: "на",            hu: "-on, -ra, -re (elöljárószó)" },
-    "полу":         { form: "полу́",         lemma: "пол",           hu: "padló" },
-    "ноги":         { form: "но́ги",         lemma: "нога́",          hu: "láb" },
-    "задраны":      { form: "задра́ны",      lemma: "задра́ть",      aspect: { impf: "задира́ть", perf: "задра́ть" }, hu: "felhúz, felszegez" },
-    "стену":        { form: "сте́ну",        lemma: "стена́",         hu: "fal" },
-    "где-то":       { form: "где́-то",       lemma: "где́-то",        hu: "valahol" },
-    "писали":       { form: "писа́ли",       lemma: "писа́ть",       aspect: { impf: "писа́ть", perf: "написа́ть" }, hu: "ír" },
-    "что":          { form: "что",          lemma: "что",            hu: "hogy; mi" },
-    "так":          { form: "так",          lemma: "так",            hu: "így" },
-    "сходят":       { form: "схо́дят",       lemma: "сходи́ть",      aspect: { impf: "сходи́ть", perf: "сойти́" }, hu: "lemegy, leszáll" },
-    "отёки":        { form: "отёки",        lemma: "отёк",           hu: "duzzanat, ödéma" },
-    "а":            { form: "а",            lemma: "а",              hu: "és, pedig, míg" },
-    "значит":       { form: "зна́чит",       lemma: "значи́ть",      aspect: { impf: "значи́ть", perf: "—" }, hu: "jelent" },
-    "лишние":       { form: "ли́шние",       lemma: "ли́шний",        hu: "felesleges" },
-    "объёмы":       { form: "объёмы",       lemma: "объём",          hu: "térfogat" },
-    "смотрю":       { form: "смотрю́",       lemma: "смотре́ть",     aspect: { impf: "смотре́ть", perf: "посмотре́ть" }, hu: "néz" },
-    "в":            { form: "в",            lemma: "в",              hu: "-ba, -be; -ban, -ben" },
-    "потолок":      { form: "потоло́к",      lemma: "потоло́к",       hu: "mennyezet" },
-    "и":            { form: "и",            lemma: "и",              hu: "és" },
-    "надеюсь":      { form: "наде́юсь",      lemma: "наде́яться",    aspect: { impf: "наде́яться", perf: "понаде́яться" }, hu: "remél" },
-    "как":          { form: "как",          lemma: "как",            hu: "hogyan; mint; ahogy" },
-    "только":       { form: "то́лько",       lemma: "то́лько",        hu: "csak" },
-    "уйдут":        { form: "уйду́т",        lemma: "уйти́",         aspect: { impf: "уходи́ть", perf: "уйти́" }, hu: "elmegy, eltűnik" },
-    "придут":       { form: "приду́т",       lemma: "прийти́",       aspect: { impf: "приходи́ть", perf: "прийти́" }, hu: "megjön, eljön" },
-    "красота":      { form: "красота́",      lemma: "красота́",       hu: "szépség" },
-    "счастье":      { form: "сча́стье",      lemma: "сча́стье",       hu: "boldogság" },
-    "уверенность":  { form: "уве́ренность",  lemma: "уве́ренность",   hu: "magabiztosság, bizonyosság" },
-    "себе":         { form: "себе́",         lemma: "себя́",          hu: "magát, önmagát" },
-    "достойная":    { form: "досто́йная",    lemma: "досто́йный",     hu: "méltó" },
-    "нормальная":   { form: "норма́льная",   lemma: "норма́льный",    hu: "normális" },
-    "жизнь":        { form: "жизнь",         lemma: "жизнь",          hu: "élet" },
+/* =========================================================
+   SZÓTÁR — orosz szó -> { lemma, aspect (igéknél), hu }
+   Csak az ismert szavak kapnak fordítást a listában; a
+   szövegben minden szó kattintható, de ismeretlen szónál
+   nem történik semmi (nincs benne a `dict`-ben).
+   ========================================================= */
+const dict = {
+  "я": { lemma: "я", hu: "én" },
+  "лежу": { lemma: "лежа́ть", aspect: { impf: "лежа́ть", perf: "полежа́ть" }, hu: "fekszik" },
+  "на": { lemma: "на", hu: "-on, -ra, -re (elöljárószó)" },
+  "полу": { lemma: "пол", hu: "padló" },
+  "ноги": { lemma: "нога́", hu: "láb" },
+  "задраны": { lemma: "задра́ть", aspect: { impf: "задира́ть", perf: "задра́ть" }, hu: "felhúz, felszegez" },
+  "стену": { lemma: "стена́", hu: "fal" },
+  "где-то": { lemma: "где́-то", hu: "valahol" },
+  "писали": { lemma: "писа́ть", aspect: { impf: "писа́ть", perf: "написа́ть" }, hu: "ír" },
+  "что": { lemma: "что", hu: "hogy; mi" },
+  "так": { lemma: "так", hu: "így" },
+  "сходят": { lemma: "сходи́ть", aspect: { impf: "сходи́ть", perf: "сойти́" }, hu: "lemegy, leszáll" },
+  "отёки": { lemma: "отёк", hu: "duzzanat, ödéma" },
+  "а": { lemma: "а", hu: "és, pedig, míg" },
+  "значит": { lemma: "значи́ть", aspect: { impf: "значи́ть", perf: "—" }, hu: "jelent" },
+  "лишние": { lemma: "ли́шний", hu: "felesleges" },
+  "объёмы": { lemma: "объём", hu: "térfogat" },
+  "смотрю": { lemma: "смотре́ть", aspect: { impf: "смотре́ть", perf: "посмотре́ть" }, hu: "néz" },
+  "в": { lemma: "в", hu: "-ba, -be; -ban, -ben" },
+  "потолок": { lemma: "потоло́к", hu: "mennyezet" },
+  "и": { lemma: "и", hu: "és" },
+  "надеюсь": { lemma: "наде́яться", aspect: { impf: "наде́яться", perf: "понаде́яться" }, hu: "remél" },
+  "как": { lemma: "как", hu: "hogyan; mint; ahogy" },
+  "только": { lemma: "то́лько", hu: "csak" },
+  "уйдут": { lemma: "уйти́", aspect: { impf: "уходи́ть", perf: "уйти́" }, hu: "elmegy, eltűnik" },
+  "придут": { lemma: "прийти́", aspect: { impf: "приходи́ть", perf: "прийти́" }, hu: "megjön, eljön" },
+  "красота": { lemma: "красота́", hu: "szépség" },
+  "счастье": { lemma: "сча́стье", hu: "boldogság" },
+  "уверенность": { lemma: "уве́ренность", hu: "magabiztosság, bizonyosság" },
+  "себе": { lemma: "себя́", hu: "magát, önmagát" },
+  "достойная": { lemma: "досто́йный", hu: "méltó" },
+  "нормальная": { lemma: "норма́льный", hu: "normális" },
+  "жизнь": { lemma: "жизнь", hu: "élet" },
+  "тянусь": { lemma: "тяну́ться", aspect: { impf: "тяну́ться", perf: "потяну́ться" }, hu: "nyúlik" },
+  "к": { lemma: "к", hu: "-hoz, -hez, -höz (elöljárószó)" },
+  "телефону": { lemma: "телефо́н", hu: "telefon" },
+  "скроллю": { lemma: "скро́ллить", aspect: { impf: "скро́ллить", perf: "—" }, hu: "görget" },
+  "приложении": { lemma: "приложе́ние", hu: "alkalmazás" },
+  "чаще": { lemma: "ча́сто", hu: "gyakran" },
+  "которого": { lemma: "кото́рый", hu: "amelyik, aki" },
+  "захожу": { lemma: "заходи́ть", aspect: { impf: "заходи́ть", perf: "зайти́" }, hu: "belép, benéz" },
+  "разве": { lemma: "ра́зве", hu: "vajon, talán" },
+  "рабочую": { lemma: "рабо́чий", hu: "munkás, munka-" },
+  "почту": { lemma: "по́чта", hu: "posta" },
+  "делаю": { lemma: "де́лать", aspect: { impf: "де́лать", perf: "сде́лать" }, hu: "csinál" },
+  "заказ": { lemma: "зака́з", hu: "rendelés" },
+  "это": { lemma: "э́то", hu: "ez" },
+  "действие": { lemma: "де́йствие", hu: "cselekvés, tett" },
+  "совершаю": { lemma: "соверша́ть", aspect: { impf: "соверша́ть", perf: "соверши́ть" }, hu: "elkövet, végrehajt" },
+  "каждый": { lemma: "ка́ждый", hu: "minden egyes" },
+  "раз": { lemma: "раз", hu: "alkalom" },
+  "когда": { lemma: "когда́", hu: "amikor" },
+  "пустота": { lemma: "пустота́", hu: "üresség" },
+  "пожирает": { lemma: "пожира́ть", aspect: { impf: "пожира́ть", perf: "пожра́ть" }, hu: "felfal, felemészt" },
+  "меня": { lemma: "я", hu: "én" },
+  "изнутри": { lemma: "изнутри́", hu: "belülről" },
+  "пустоту": { lemma: "пустота́", hu: "üresség" },
+  "эту": { lemma: "э́тот", hu: "ez" },
+  "хочется": { lemma: "хоте́ться", aspect: { impf: "хоте́ться", perf: "захоте́ться" }, hu: "kedve van (személytelen szerkezet)" },
+  "кем-нибудь": { lemma: "кто-нибу́дь", hu: "valaki" },
+  "заполнить": { lemma: "запо́лнить", aspect: { impf: "заполня́ть", perf: "запо́лнить" }, hu: "kitölt, betölt" },
+  "вот": { lemma: "вот", hu: "íme, hát" },
+  "некем": { lemma: "не́кем", hu: "nincs kivel" },
+  "же": { lemma: "же", hu: "pedig, hiszen" },
+  "совсем": { lemma: "совсе́м", hu: "egyáltalán, teljesen" },
+  "не": { lemma: "не", hu: "nem" },
+  "получится": { lemma: "получи́ться", aspect: { impf: "получа́ться", perf: "получи́ться" }, hu: "sikerül" },
+  "чем-нибудь": { lemma: "что-нибу́дь", hu: "valami" },
+  "вдох": { lemma: "вдох", hu: "belégzés" },
+  "начинаю": { lemma: "начина́ть", aspect: { impf: "начина́ть", perf: "нача́ть" }, hu: "elkezd" },
+  "считать": { lemma: "счита́ть", aspect: { impf: "счита́ть", perf: "посчита́ть" }, hu: "számol" },
+  "про": { lemma: "про", hu: "-ról, -ről" },
+  "себя": { lemma: "себя́", hu: "magát, önmagát" },
+  "сейчас": { lemma: "сейча́с", hu: "most" },
+  "всё": { lemma: "всё", hu: "minden" },
+  "наладится": { lemma: "нала́диться", aspect: { impf: "нала́живаться", perf: "нала́диться" }, hu: "rendbe jön, helyreáll" },
+  "тем": { lemma: "тот", hu: "az" },
+  "временем": { lemma: "вре́мя", hu: "idő" },
+  "летит": { lemma: "лете́ть", aspect: { impf: "лете́ть", perf: "полете́ть" }, hu: "repül" },
+  "по": { lemma: "по", hu: "-on, -en, -ön végig; szerint" },
+  "тверской": { lemma: "Тверска́я", hu: "Tverszkaja (utca Moszkvában)" },
+  "курьер": { lemma: "курье́р", hu: "futár" },
+  "санжар": { lemma: "Санжа́р", hu: "Szanzsar (férfinév)" },
+  "наверное": { lemma: "наве́рное", hu: "valószínűleg" },
+  "он": { lemma: "он", hu: "ő (hímnem)" },
+  "уже": { lemma: "уже́", hu: "már" },
+  "запомнил": { lemma: "запо́мнить", aspect: { impf: "запомина́ть", perf: "запо́мнить" }, hu: "megjegyez" },
+  "несложно": { lemma: "несло́жно", hu: "nem bonyolult, egyszerű" },
+  "розовая": { lemma: "ро́зовый", hu: "rózsaszín" },
+  "пижама": { lemma: "пижа́ма", hu: "pizsama" },
+  "красные": { lemma: "кра́сный", hu: "piros" },
+  "ногти": { lemma: "но́готь", hu: "köröm" },
+  "торопливый": { lemma: "торопли́вый", hu: "sietős" },
+  "хват": { lemma: "хват", hu: "fogás, markolás" },
+  "рублей": { lemma: "рубль", hu: "rubel" },
+  "чаевых": { lemma: "чаевы́е", hu: "borravaló" },
+  "всегда": { lemma: "всегда́", hu: "mindig" },
+  "ближе": { lemma: "бли́зко", hu: "közelebb" },
+  "ночи": { lemma: "ночь", hu: "éjszaka" },
+  "грузинский": { lemma: "грузи́нский", hu: "grúz" },
+  "ресторан": { lemma: "рестора́н", hu: "étterem" },
+  "как-то": { lemma: "ка́к-то", hu: "egyszer, valahogy" },
+  "приезжал": { lemma: "приезжа́ть", aspect: { impf: "приезжа́ть", perf: "прие́хать" }, hu: "megérkezik (járművel)" },
+  "дважды": { lemma: "два́жды", hu: "kétszer" },
+  "за": { lemma: "за", hu: "-ért, mögé, alatt" },
+  "вечер": { lemma: "ве́чер", hu: "este" },
+  "тот": { lemma: "тот", hu: "az" },
+  "случай": { lemma: "слу́чай", hu: "eset" },
+  "мне": { lemma: "я", hu: "én (részes eset)" },
+  "особенно": { lemma: "осо́бенно", hu: "különösen" },
+  "стыдно": { lemma: "сты́дно", hu: "szégyellős, szégyen" },
+  "списал": { lemma: "списа́ть", aspect: { impf: "спи́сывать", perf: "списа́ть" }, hu: "betudott vminek" },
+  "мою": { lemma: "мой", hu: "az enyém" },
+  "рассеянность": { lemma: "рассе́янность", hu: "szórakozottság" },
+  "с": { lemma: "с", hu: "-val, -vel; -ról, -ről" },
+  "другой": { lemma: "друго́й", hu: "másik" },
+  "стороны": { lemma: "сторона́", hu: "oldal" },
+  "выезжает": { lemma: "выезжа́ть", aspect: { impf: "выезжа́ть", perf: "вы́ехать" }, hu: "kihajt, elindul (járművel)" },
+  "второй": { lemma: "второ́й", hu: "második" },
+  "хушруз": { lemma: "Хушру́з", hu: "Husruz (férfinév)" },
+  "у": { lemma: "у", hu: "-nál, -nél" },
+  "него": { lemma: "он", hu: "ő (birtokos esetben)" },
+  "рюкзаке": { lemma: "рюкза́к", hu: "hátizsák" },
+  "три": { lemma: "три", hu: "három" },
+  "пачки": { lemma: "па́чка", hu: "csomag" },
+  "вафель": { lemma: "ва́фля", hu: "ostya" },
+  "ведро": { lemma: "ведро́", hu: "vödör" },
+  "мороженого": { lemma: "моро́женое", hu: "fagylalt" },
+  "кило": { lemma: "кило́", hu: "kiló" },
+  "халвы": { lemma: "халва́", hu: "halva" },
+  "арахисовая": { lemma: "ара́хисовый", hu: "mogyoró-" },
+  "паста": { lemma: "па́ста", hu: "paszta, krém" },
+  "орешки": { lemma: "оре́шек", hu: "kis dió/mogyoró" },
+  "со": { lemma: "с", hu: "-val, -vel" },
+  "сгущёнкой": { lemma: "сгущёнка", hu: "sűrített tej" },
+  "они": { lemma: "они́", hu: "ők" },
+  "летят": { lemma: "лете́ть", aspect: { impf: "лете́ть", perf: "полете́ть" }, hu: "repülnek" },
+  "навстречу": { lemma: "навстре́чу", hu: "szembe, elébe" },
+  "друг": { lemma: "друг дру́гу", hu: "egymásnak" },
+  "другу": { lemma: "друг дру́гу", hu: "egymásnak" },
+  "два": { lemma: "два", hu: "kettő" },
+  "велосипедиста": { lemma: "велосипеди́ст", hu: "kerékpáros" },
+  "один": { lemma: "оди́н", hu: "egy" },
+  "из": { lemma: "из", hu: "-ból, -ből" },
+  "точки": { lemma: "то́чка", hu: "pont" },
+  "местом": { lemma: "ме́сто", hu: "hely" },
+  "встречи": { lemma: "встре́ча", hu: "találkozás" },
+  "точке": { lemma: "то́чка", hu: "pont" },
+  "моей": { lemma: "мой", hu: "az enyém" },
+  "то": { lemma: "то", hu: "az; akkor" },
+  "есть": { lemma: "быть", hu: "van; azaz" },
+  "квартире": { lemma: "кварти́ра", hu: "lakás" },
+  "звонок": { lemma: "звоно́к", hu: "csengés, csengő" },
+  "подлетаю": { lemma: "подлета́ть", aspect: { impf: "подлета́ть", perf: "подлете́ть" }, hu: "odarepül, odaszalad" },
+  "двери": { lemma: "дверь", hu: "ajtó" },
+  "дёргаю": { lemma: "дёргать", aspect: { impf: "дёргать", perf: "дёрнуть" }, hu: "ránt, húz" },
+  "её": { lemma: "она́", hu: "őt, az övé" },
+  "ни": { lemma: "ни", hu: "sem" },
+  "здрасьте": { lemma: "здра́сьте", hu: "szia, üdv (köszönés)" },
+  "до": { lemma: "до свида́ния", hu: "viszontlátásra" },
+  "свидания": { lemma: "до свида́ния", hu: "viszontlátásra" },
+  "хватаю": { lemma: "хвата́ть", aspect: { impf: "хвата́ть", perf: "схвати́ть" }, hu: "megragad" },
+  "пакет": { lemma: "паке́т", hu: "csomag, zacskó" },
+  "конечно": { lemma: "коне́чно", hu: "persze" },
+  "сладкое": { lemma: "сла́дкое", hu: "édesség" },
+  "приехало": { lemma: "прие́хать", aspect: { impf: "приезжа́ть", perf: "прие́хать" }, hu: "megérkezett" },
+  "первым": { lemma: "пе́рвый", hu: "első" },
+  "от": { lemma: "от", hu: "-tól, -től" },
+  "негодования": { lemma: "негодова́ние", hu: "felháborodás" },
+  "почти": { lemma: "почти́", hu: "majdnem" },
+  "рычу": { lemma: "рыча́ть", aspect: { impf: "рыча́ть", perf: "зарыча́ть" }, hu: "morog" },
+  "зверь": { lemma: "зверь", hu: "vadállat" },
+  "ждать": { lemma: "ждать", aspect: { impf: "ждать", perf: "подожда́ть" }, hu: "vár" },
+  "невыносимо": { lemma: "невыноси́мо", hu: "elviselhetetlen" },
+  "значок": { lemma: "значо́к", hu: "jelvény, ikon" },
+  "курьера": { lemma: "курье́р", hu: "futár" },
+  "разумеется": { lemma: "разуме́ется", hu: "természetesen" },
+  "недвижим": { lemma: "недви́жим", hu: "mozdulatlan" },
+  "карте": { lemma: "ка́рта", hu: "térkép" },
+  "окончательно": { lemma: "оконча́тельно", hu: "végleg" },
+  "сатанею": { lemma: "сатане́ть", aspect: { impf: "сатане́ть", perf: "осатане́ть" }, hu: "megvadul, dühöng" },
+  "строчу": { lemma: "строчи́ть", aspect: { impf: "строчи́ть", perf: "настрочи́ть" }, hu: "gyorsan ír, gépel" },
+  "гневное": { lemma: "гне́вный", hu: "dühös" },
+  "сообщение": { lemma: "сообще́ние", hu: "üzenet" },
+  "саппорт": { lemma: "сапо́рт", hu: "ügyfélszolgálat (support)" },
+  "повторная": { lemma: "повто́рный", hu: "ismételt" },
+  "трель": { lemma: "трель", hu: "csengés, trilla" },
+  "звонка": { lemma: "звоно́к", hu: "csengés" },
+  "спасает": { lemma: "спаса́ть", aspect: { impf: "спаса́ть", perf: "спасти́" }, hu: "megment" },
+  "оператора": { lemma: "опера́тор", hu: "operátor, ügyintéző" },
+  "поддержки": { lemma: "подде́ржка", hu: "támogatás, ügyfélszolgálat" },
+  "василия": { lemma: "Васи́лий", hu: "Vaszilij (férfinév)" },
+  "претензия": { lemma: "прете́нзия", hu: "panasz, reklamáció" },
+  "отменена": { lemma: "отмени́ть", aspect: { impf: "отменя́ть", perf: "отмени́ть" }, hu: "törölve" },
+  "представляю": { lemma: "представля́ть", aspect: { impf: "представля́ть", perf: "предста́вить" }, hu: "elképzel" },
+  "василий": { lemma: "Васи́лий", hu: "Vaszilij (férfinév)" },
+  "облегчением": { lemma: "облегче́ние", hu: "megkönnyebbülés" },
+  "выдыхает": { lemma: "выдыха́ть", aspect: { impf: "выдыха́ть", perf: "вы́дохнуть" }, hu: "kifúj (levegőt)" },
+  "идёт": { lemma: "идти́", aspect: { impf: "идти́", perf: "пойти́" }, hu: "megy" },
+  "заваривать": { lemma: "завари́ть", aspect: { impf: "зава́ривать", perf: "завари́ть" }, hu: "lefőz (kávét, teát)" },
+  "кофе": { lemma: "ко́фе", hu: "kávé" },
+  "симпатичной": { lemma: "симпати́чный", hu: "szimpatikus" },
+  "коллеге": { lemma: "колле́га", hu: "kolléga" },
+  "ночной": { lemma: "ночно́й", hu: "éjszakai" },
+  "смене": { lemma: "сме́на", hu: "műszak" },
+  "другом": { lemma: "друго́й", hu: "másik" },
+  "конце": { lemma: "коне́ц", hu: "vég" },
+  "цао": { lemma: "ЦАО", hu: "Központi Közigazgatási Körzet (Moszkva)" },
+  "завязывается": { lemma: "завя́зываться", aspect: { impf: "завя́зываться", perf: "завяза́ться" }, hu: "kialakul, szövődik" },
+  "необременительный": { lemma: "необремени́тельный", hu: "nem megterhelő" },
+  "служебный": { lemma: "служе́бный", hu: "munkahelyi, szolgálati" },
+  "роман": { lemma: "рома́н", hu: "regény; románc" },
+  "залезаю": { lemma: "залеза́ть", aspect: { impf: "залеза́ть", perf: "зале́зть" }, hu: "bemászik" },
+  "под": { lemma: "под", hu: "alá, alatt" },
+  "душ": { lemma: "душ", hu: "zuhany" },
+  "сердце": { lemma: "се́рдце", hu: "szív" },
+  "ещё": { lemma: "ещё", hu: "még" },
+  "отошедшее": { lemma: "отойти́", aspect: { impf: "отходи́ть", perf: "отойти́" }, hu: "elmúlt, elmenő" },
+  "страха": { lemma: "страх", hu: "félelem" },
+  "бьётся": { lemma: "би́ться", aspect: { impf: "би́ться", perf: "уда́риться" }, hu: "dobog, ver" },
+  "сильнее": { lemma: "си́льно", hu: "erősebben" },
+  "обычного": { lemma: "обы́чный", hu: "szokásos" },
+  "было": { lemma: "быть", hu: "volt" },
+  "незачем": { lemma: "не́зачем", hu: "nincs értelme, felesleges" },
+  "растворилось": { lemma: "раствори́ться", aspect: { impf: "растворя́ться", perf: "раствори́ться" }, hu: "feloldódott" },
+  "во": { lemma: "в", hu: "-ban, -ben" },
+  "вселенной": { lemma: "вселе́нная", hu: "univerzum" },
+  "нулевый": { lemma: "нулево́й", hu: "nulla, semmilyen" },
+  "выхлоп": { lemma: "вы́хлоп", hu: "kipufogás, hozam (átv.)" },
+  "никакого": { lemma: "никако́й", hu: "semmilyen" },
+  "кпд": { lemma: "КПД", hu: "hatásfok" },
+  "выхожу": { lemma: "выходи́ть", aspect: { impf: "выходи́ть", perf: "вы́йти" }, hu: "kimegy" },
+  "душа": { lemma: "душ", hu: "zuhany" },
+  "усилием": { lemma: "уси́лие", hu: "erőfeszítés" },
+  "вытираюсь": { lemma: "вытира́ться", aspect: { impf: "вытира́ться", perf: "вы́тереться" }, hu: "megtörölközik" },
+  "подхожу": { lemma: "подходи́ть", aspect: { impf: "подходи́ть", perf: "подойти́" }, hu: "odamegy" },
+  "зеркалу": { lemma: "зе́ркало", hu: "tükör" },
+  "коридоре": { lemma: "коридо́р", hu: "folyosó" },
+  "осмеливаюсь": { lemma: "осме́ливаться", aspect: { impf: "осме́ливаться", perf: "осме́литься" }, hu: "merészel" },
+  "посмотреть": { lemma: "посмотре́ть", aspect: { impf: "смотре́ть", perf: "посмотре́ть" }, hu: "megnéz" },
+  "прямо": { lemma: "пря́мо", hu: "egyenesen" },
+  "упор": { lemma: "упо́р", hu: "(в упор = közvetlenül, szemtől szembe)" },
+  "своё": { lemma: "свой", hu: "saját" },
+  "тело": { lemma: "те́ло", hu: "test" },
+  "голове": { lemma: "голова́", hu: "fej" },
+  "бьются": { lemma: "би́ться", aspect: { impf: "би́ться", perf: "уда́риться" }, hu: "dobognak" },
+  "слова": { lemma: "сло́во", hu: "szó" },
+  "жирная": { lemma: "жи́рный", hu: "kövér, zsíros" },
+  "туша": { lemma: "ту́ша", hu: "tetem, hústömeg" },
+  "мразь": { lemma: "мразь", hu: "szemét, aljas dolog" },
+  "ненавижу": { lemma: "ненави́деть", aspect: { impf: "ненави́деть", perf: "—" }, hu: "gyűlöl" },
+  "чудовище": { lemma: "чудо́вище", hu: "szörnyeteg" },
+  "рыхлость": { lemma: "ры́хлость", hu: "petyhüdtség, lazaság" },
+  "обвисло": { lemma: "обви́снуть", aspect: { impf: "обвиса́ть", perf: "обви́снуть" }, hu: "lelógott, megereszkedett" },
+  "толстуха": { lemma: "толсту́ха", hu: "kövér nő" },
+  "плачу": { lemma: "пла́кать", aspect: { impf: "пла́кать", perf: "запла́кать" }, hu: "sír" },
+  "ведь": { lemma: "ведь", hu: "hiszen" },
+  "никто": { lemma: "никто́", hu: "senki" },
+  "любит": { lemma: "люби́ть", aspect: { impf: "люби́ть", perf: "полюби́ть" }, hu: "szeret" },
+  "даже": { lemma: "да́же", hu: "még ... is" },
+  "сама": { lemma: "сам", hu: "maga" }
+};
 
-    "тянусь":       { lemma: "тяну́ться",     aspect: { impf: "тяну́ться", perf: "потяну́ться" }, hu: "nyúlik" },
-    "к":            { lemma: "к",             hu: "-hoz, -hez, -höz (elöljárószó)" },
-    "телефону":     { lemma: "телефо́н",       hu: "telefon" },
-    "скроллю":      { lemma: "скро́ллить",     aspect: { impf: "скро́ллить", perf: "—" }, hu: "görget" },
-    "приложении":   { lemma: "приложе́ние",    hu: "alkalmazás" },
-    "чаще":         { lemma: "ча́сто",         hu: "gyakran" },
-    "которого":     { lemma: "кото́рый",       hu: "amelyik, aki" },
-    "захожу":       { lemma: "заходи́ть",      aspect: { impf: "заходи́ть", perf: "зайти́" }, hu: "belép, benéz" },
-    "разве":        { lemma: "ра́зве",         hu: "vajon, talán" },
-    "рабочую":      { lemma: "рабо́чий",       hu: "munkás, munka-" },
-    "почту":        { lemma: "по́чта",         hu: "posta" },
-    "делаю":        { lemma: "де́лать",        aspect: { impf: "де́лать", perf: "сде́лать" }, hu: "csinál" },
-    "заказ":        { lemma: "зака́з",         hu: "rendelés" },
-    "это":          { lemma: "э́то",           hu: "ez" },
-    "действие":     { lemma: "де́йствие",      hu: "cselekvés, tett" },
-    "совершаю":     { lemma: "соверша́ть",     aspect: { impf: "соверша́ть", perf: "соверши́ть" }, hu: "elkövet, végrehajt" },
-    "каждый":       { lemma: "ка́ждый",        hu: "minden egyes" },
-    "раз":          { lemma: "раз",            hu: "alkalom" },
-    "когда":        { lemma: "когда́",         hu: "amikor" },
-    "пустота":      { lemma: "пустота́",       hu: "üresség" },
-    "пожирает":     { lemma: "пожира́ть",      aspect: { impf: "пожира́ть", perf: "пожра́ть" }, hu: "felfal, felemészt" },
-    "меня":         { lemma: "я",              hu: "én" },
-    "изнутри":      { lemma: "изнутри́",       hu: "belülről" },
-    "пустоту":      { lemma: "пустота́",       hu: "üresség" },
-    "эту":          { lemma: "э́тот",          hu: "ez" },
-    "хочется":      { lemma: "хоте́ться",      aspect: { impf: "хоте́ться", perf: "захоте́ться" }, hu: "kedve van (személytelen szerkezet)" },
-    "кем-нибудь":   { lemma: "кто-нибу́дь",    hu: "valaki" },
-    "заполнить":    { lemma: "запо́лнить",     aspect: { impf: "заполня́ть", perf: "запо́лнить" }, hu: "kitölt, betölt" },
-    "вот":          { lemma: "вот",            hu: "íme, hát" },
-    "некем":        { lemma: "не́кем",         hu: "nincs kivel" },
-    "же":           { lemma: "же",             hu: "pedig, hiszen" },
-    "совсем":       { lemma: "совсе́м",        hu: "egyáltalán, teljesen" },
-    "не":           { lemma: "не",             hu: "nem" },
-    "получится":    { lemma: "получи́ться",    aspect: { impf: "получа́ться", perf: "получи́ться" }, hu: "sikerül" },
-    "чем-нибудь":   { lemma: "что-нибу́дь",    hu: "valami" },
-    "вдох":         { lemma: "вдох",           hu: "belégzés" },
-    "начинаю":      { lemma: "начина́ть",      aspect: { impf: "начина́ть", perf: "нача́ть" }, hu: "elkezd" },
-    "считать":      { lemma: "счита́ть",       aspect: { impf: "счита́ть", perf: "посчита́ть" }, hu: "számol" },
-    "про":          { lemma: "про",            hu: "-ról, -ről" },
-    "себя":         { lemma: "себя́",          hu: "magát, önmagát" },
-    "сейчас":       { lemma: "сейча́с",        hu: "most" },
-    "всё":          { lemma: "всё",            hu: "minden" },
-    "наладится":    { lemma: "нала́диться",    aspect: { impf: "нала́живаться", perf: "нала́диться" }, hu: "rendbe jön, helyreáll" }
-  };
+/* =========================================================
+   FEJEZETEK — 63 rész. Az 1. rész valódi szöveggel van
+   feltöltve; a 2–63. rész helykitöltő szöveggel szerepel.
+   Egy rész kitöltéséhez cseréld le a "paragraphs" tömb
+   tartalmát (egy sztring = egy bekezdés), és állítsd be az
+   "audio" mezőt a megfelelő mp3 fájl elérési útjára.
+   ========================================================= */
+const chapterTexts = {
+  1: [
+    "Я лежу на полу, ноги задраны на стену. Где-то писали, что так сходят отёки, а значит, лишние объёмы. Я смотрю в потолок и надеюсь, что как только объёмы уйдут, придут красота, счастье, уверенность в себе. Достойная нормальная жизнь.",
+    "Я тянусь к телефону и скроллю в приложении, чаще которого захожу разве что в рабочую почту. Я делаю заказ. Это действие я совершаю каждый раз, когда пустота пожирает меня изнутри, и пустоту эту хочется кем-нибудь заполнить, только вот некем же, некем совсем. Кем-нибудь не получится; получится чем-нибудь.",
+    "Я делаю вдох и начинаю считать про себя.",
+    "Сейчас всё наладится.",
+    "Тем временем летит по Тверской курьер Санжар. Наверное, он уже запомнил меня.",
+    "Это несложно: розовая пижама, красные ногти, торопливый хват, 100 рублей чаевых; всегда ближе к ночи, всегда грузинский ресторан.",
+    "Как-то он приезжал дважды за вечер. За тот случай мне особенно стыдно; надеюсь, Санжар списал это на мою рассеянность.",
+    "С другой стороны Тверской выезжает второй курьер – Хушруз. У него в рюкзаке три пачки вафель, ведро мороженого, кило халвы, арахисовая паста, орешки со сгущёнкой.",
+    "И вот они летят навстречу друг другу, два велосипедиста: один – из точки А, второй – из точки B с местом встречи в точке С – моей, то есть, квартире.",
+    "Звонок.",
+    "Я подлетаю к двери, дёргаю её на себя, ни «здрасьте», ни «до свидания», хватаю пакет. Конечно же, сладкое приехало первым.",
+    "От негодования я почти рычу как зверь. Ждать невыносимо; значок курьера, разумеется, недвижим на карте.",
+    "Я окончательно сатанею и строчу гневное сообщение в саппорт.",
+    "Повторная трель звонка спасает оператора поддержки Василия: претензия отменена.",
+    "Я представляю, как Василий с облегчением выдыхает и идёт заваривать кофе симпатичной коллеге по ночной смене.",
+    "На другом конце ЦАО завязывается необременительный служебный роман.",
+    "Я залезаю под душ. Сердце, ещё не отошедшее от страха, бьётся сильнее обычного.",
+    "Это всё было сейчас – незачем.",
+    "Это всё растворилось во Вселенной.",
+    "Нулевый выхлоп, никакого КПД.",
+    "Я выхожу из душа, с усилием вытираюсь, подхожу к зеркалу в коридоре.",
+    "Осмеливаюсь посмотреть прямо в упор на своё тело.",
+    "В голове бьются слова: «жирная», «туша», «мразь», «ненавижу», «чудовище», «рыхлость», «обвисло», «толстуха».",
+    "Я плачу, ведь меня никто не любит.",
+    "Даже я сама."
+  ]
+  // 2-től 63-ig ide kerülnek a további részek, ugyanilyen formában:
+  // 2: ["Első bekezdés orosz szövege.", "Második bekezdés."],
+};
 
-  const selected = new Set();
-  const entriesEl = document.getElementById('entries');
-  const emptyMsg = document.getElementById('emptyMsg');
-  const countEl = document.getElementById('count');
+const TOTAL_CHAPTERS = 63;
+const chapters = [];
+for (let i = 1; i <= TOTAL_CHAPTERS; i++) {
+  chapters.push({
+    id: i,
+    title: i + ". rész",
+    audio: "audio/fejezet-" + i + ".mp3",
+    paragraphs: chapterTexts[i] || null
+  });
+}
 
-  function render() {
-    entriesEl.innerHTML = '';
-    if (selected.size === 0) {
-      emptyMsg.style.display = 'block';
-    } else {
-      emptyMsg.style.display = 'none';
-      selected.forEach(key => {
-        const d = dict[key];
-        if (!d) return;
+/* =========================================================
+   TARTALOMJEGYZÉK renderelése
+   ========================================================= */
+const tocGrid = document.getElementById('tocGrid');
+chapters.forEach(ch => {
+  const btn = document.createElement('button');
+  btn.className = 'toc-item' + (ch.paragraphs ? ' has-text' : '');
+  btn.textContent = ch.title;
+  btn.addEventListener('click', () => openChapter(ch.id));
+  tocGrid.appendChild(btn);
+});
 
-        const row = document.createElement('tr');
+/* =========================================================
+   NÉZETVÁLTÁS
+   ========================================================= */
+const tocView = document.getElementById('tocView');
+const readerView = document.getElementById('readerView');
+const backBtn = document.getElementById('backBtn');
+const chapterEyebrow = document.getElementById('chapterEyebrow');
+const textContainer = document.getElementById('text');
+const playerTitleEl = document.getElementById('playerTitle');
 
-        const ruCell = document.createElement('td');
-        const ru = document.createElement('p');
-        ru.className = 'entry-ru';
-        ru.textContent = d.lemma || key;
-        ruCell.appendChild(ru);
-        if (d.aspect) {
-          const asp = document.createElement('p');
-          asp.className = 'entry-aspect';
-          asp.textContent = 'imperf.: ' + d.aspect.impf + '\nperf.: ' + d.aspect.perf;
-          asp.style.whiteSpace = 'pre-line';
-          ruCell.appendChild(asp);
-        }
+backBtn.addEventListener('click', () => {
+  audio.pause();
+  readerView.style.display = 'none';
+  tocView.style.display = 'flex';
+  window.scrollTo(0, 0);
+});
 
-        const huCell = document.createElement('td');
-        const hu = document.createElement('p');
-        hu.className = 'entry-hu';
-        hu.textContent = d.hu;
-        huCell.appendChild(hu);
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
-        const removeCell = document.createElement('td');
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'entry-remove';
-        removeBtn.textContent = '×';
-        removeBtn.setAttribute('aria-label', 'Eltávolítás a listából');
-        removeBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleWord(key);
-        });
-        removeCell.appendChild(removeBtn);
-
-        row.appendChild(ruCell);
-        row.appendChild(huCell);
-        row.appendChild(removeCell);
-        entriesEl.appendChild(row);
-      });
-    }
-    countEl.textContent = selected.size + (selected.size === 1 ? ' szó kiválasztva' : ' szó kiválasztva');
-    document.querySelectorAll('.word').forEach(span => {
-      const key = span.getAttribute('data-key');
-      span.classList.toggle('active', selected.has(key));
-    });
+function wrapParagraph(text) {
+  const re = /[А-Яа-яЁёA-Za-z0-9]+(?:-[А-Яа-яЁёA-Za-z0-9]+)*/g;
+  let result = '';
+  let lastIndex = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    result += escapeHtml(text.slice(lastIndex, m.index));
+    const word = m[0];
+    const key = word.toLowerCase();
+    result += '<span class="word" data-key="' + key + '">' + escapeHtml(word) + '</span>';
+    lastIndex = m.index + word.length;
   }
+  result += escapeHtml(text.slice(lastIndex));
+  return result;
+}
 
-  function toggleWord(key) {
-    if (!dict[key]) return;
-    if (selected.has(key)) {
-      selected.delete(key);
-    } else {
-      selected.add(key);
-    }
-    render();
+function openChapter(id) {
+  const ch = chapters.find(c => c.id === id);
+  if (!ch) return;
+
+  chapterEyebrow.textContent = ch.title;
+
+  if (ch.paragraphs) {
+    textContainer.innerHTML = ch.paragraphs
+      .map(p => '<p class="text">' + wrapParagraph(p) + '</p>')
+      .join('');
+  } else {
+    textContainer.innerHTML =
+      '<p class="text" style="text-indent:0; color: var(--muted); font-family: var(--sans); font-size: 15px;">' +
+      'Ehhez a részhez még nincs feltöltve szöveg.</p>';
   }
 
   document.querySelectorAll('.word').forEach(span => {
-    span.addEventListener('click', () => {
-      toggleWord(span.getAttribute('data-key'));
-    });
+    span.addEventListener('click', () => toggleWord(span.getAttribute('data-key')));
   });
-
   render();
 
-  // ---- audio player ----
-  const audio = document.getElementById('chapterAudio');
-  const playBtn = document.getElementById('playBtn');
-  const currentTimeEl = document.getElementById('currentTime');
-  const durationTimeEl = document.getElementById('durationTime');
-  const trackFill = document.getElementById('trackFill');
-  const trackHead = document.getElementById('trackHead');
-  const playerTrack = document.getElementById('playerTrack');
+  audio.pause();
+  audio.src = ch.audio;
+  audio.currentTime = 0;
+  playerTitleEl.textContent = ch.title;
+  trackFill.style.width = '0%';
+  trackHead.style.left = '0%';
+  currentTimeEl.textContent = '0:00';
+  durationTimeEl.textContent = '0:00';
 
-  function formatTime(sec) {
-    if (!isFinite(sec) || isNaN(sec)) return '0:00';
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60);
-    return m + ':' + String(s).padStart(2, '0');
-  }
+  tocView.style.display = 'none';
+  readerView.style.display = 'block';
+  window.scrollTo(0, 0);
+}
 
-  function updateProgress() {
-    const dur = audio.duration || 0;
-    const pct = dur ? (audio.currentTime / dur) * 100 : 0;
-    trackFill.style.width = pct + '%';
-    trackHead.style.left = pct + '%';
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-  }
+/* =========================================================
+   SZÓLISTA
+   ========================================================= */
+const selected = new Set();
+const entriesEl = document.getElementById('entries');
+const emptyMsg = document.getElementById('emptyMsg');
+const countEl = document.getElementById('count');
 
-  audio.addEventListener('loadedmetadata', () => {
-    durationTimeEl.textContent = formatTime(audio.duration);
-  });
+function render() {
+  entriesEl.innerHTML = '';
+  if (selected.size === 0) {
+    emptyMsg.style.display = 'block';
+  } else {
+    emptyMsg.style.display = 'none';
+    selected.forEach(key => {
+      const d = dict[key];
+      if (!d) return;
+      const row = document.createElement('tr');
 
-  audio.addEventListener('timeupdate', updateProgress);
+      const ruCell = document.createElement('td');
+      const ru = document.createElement('p');
+      ru.className = 'entry-ru';
+      ru.textContent = d.lemma || key;
+      ruCell.appendChild(ru);
+      if (d.aspect) {
+        const asp = document.createElement('p');
+        asp.className = 'entry-aspect';
+        asp.textContent = 'imperf.: ' + d.aspect.impf + '\nperf.: ' + d.aspect.perf;
+        ruCell.appendChild(asp);
+      }
 
-  audio.addEventListener('play', () => { playBtn.textContent = '⏸'; });
-  audio.addEventListener('pause', () => { playBtn.textContent = '▶'; });
-  audio.addEventListener('ended', () => { playBtn.textContent = '▶'; });
+      const huCell = document.createElement('td');
+      const hu = document.createElement('p');
+      hu.className = 'entry-hu';
+      hu.textContent = d.hu;
+      huCell.appendChild(hu);
 
-  playBtn.addEventListener('click', () => {
-    if (audio.paused) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
-  });
+      const removeCell = document.createElement('td');
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'entry-remove';
+      removeBtn.textContent = '×';
+      removeBtn.setAttribute('aria-label', 'Eltávolítás a listából');
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleWord(key);
+      });
+      removeCell.appendChild(removeBtn);
 
-  document.getElementById('skipBackBtn').addEventListener('click', () => {
-    audio.currentTime = Math.max(0, audio.currentTime - 10);
-    updateProgress();
-  });
-
-  document.getElementById('skipFwdBtn').addEventListener('click', () => {
-    const dur = isFinite(audio.duration) ? audio.duration : audio.currentTime + 10;
-    audio.currentTime = Math.min(dur, audio.currentTime + 10);
-    updateProgress();
-  });
-
-  function seekFromEvent(e) {
-    const rect = playerTrack.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    let pct = (clientX - rect.left) / rect.width;
-    pct = Math.min(1, Math.max(0, pct));
-    if (isFinite(audio.duration) && audio.duration > 0) {
-      audio.currentTime = pct * audio.duration;
-      updateProgress();
-    }
-  }
-
-  let isSeeking = false;
-  playerTrack.addEventListener('mousedown', (e) => { isSeeking = true; seekFromEvent(e); });
-  window.addEventListener('mousemove', (e) => { if (isSeeking) seekFromEvent(e); });
-  window.addEventListener('mouseup', () => { isSeeking = false; });
-  playerTrack.addEventListener('touchstart', (e) => { isSeeking = true; seekFromEvent(e); });
-  window.addEventListener('touchmove', (e) => { if (isSeeking) seekFromEvent(e); });
-  window.addEventListener('touchend', () => { isSeeking = false; });
-
-  // ---- which chapter is the player attached to ----
-  // Figyeli, melyik .chapter foglalja el a képernyő legnagyobb részét,
-  // és ahhoz állítja a lejátszó audio forrását / címét.
-  const chapters = Array.from(document.querySelectorAll('.chapter'));
-  const playerTitleEl = document.getElementById('playerTitle');
-  let activeChapterEl = null;
-
-  function setActiveChapter(chapterEl) {
-    if (!chapterEl || chapterEl === activeChapterEl) return;
-    activeChapterEl = chapterEl;
-    audio.pause();
-    audio.src = chapterEl.dataset.audio || '';
-    audio.currentTime = 0;
-    playerTitleEl.textContent = chapterEl.dataset.title || '';
-    trackFill.style.width = '0%';
-    trackHead.style.left = '0%';
-    currentTimeEl.textContent = '0:00';
-    durationTimeEl.textContent = '0:00';
-  }
-
-  const visibleHeights = new Map();
-
-  const chapterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      visibleHeights.set(entry.target, entry.isIntersecting ? entry.intersectionRect.height : 0);
+      row.appendChild(ruCell);
+      row.appendChild(huCell);
+      row.appendChild(removeCell);
+      entriesEl.appendChild(row);
     });
-    let best = null, bestHeight = 0;
-    visibleHeights.forEach((height, el) => {
-      if (height > bestHeight) { bestHeight = height; best = el; }
-    });
-    if (best && bestHeight > 20) {
-      setActiveChapter(best);
-    }
-  }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
-
-  chapters.forEach(ch => chapterObserver.observe(ch));
-
-  if (chapters.length) {
-    setActiveChapter(chapters[0]);
   }
+  countEl.textContent = selected.size + (selected.size === 1 ? ' szó kiválasztva' : ' szó kiválasztva');
+  document.querySelectorAll('.word').forEach(span => {
+    const key = span.getAttribute('data-key');
+    span.classList.toggle('active', selected.has(key));
+  });
+}
+
+function toggleWord(key) {
+  if (!dict[key]) return;
+  if (selected.has(key)) selected.delete(key);
+  else selected.add(key);
+  render();
+}
+
+/* =========================================================
+   AUDIO LEJÁTSZÓ
+   ========================================================= */
+const audio = document.getElementById('chapterAudio');
+const playBtn = document.getElementById('playBtn');
+const currentTimeEl = document.getElementById('currentTime');
+const durationTimeEl = document.getElementById('durationTime');
+const trackFill = document.getElementById('trackFill');
+const trackHead = document.getElementById('trackHead');
+const playerTrack = document.getElementById('playerTrack');
+
+function formatTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+function updateProgress() {
+  const dur = audio.duration || 0;
+  const pct = dur ? (audio.currentTime / dur) * 100 : 0;
+  trackFill.style.width = pct + '%';
+  trackHead.style.left = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  durationTimeEl.textContent = formatTime(audio.duration);
+});
+audio.addEventListener('timeupdate', updateProgress);
+audio.addEventListener('play', () => { playBtn.textContent = '⏸'; });
+audio.addEventListener('pause', () => { playBtn.textContent = '▶'; });
+audio.addEventListener('ended', () => { playBtn.textContent = '▶'; });
+
+playBtn.addEventListener('click', () => {
+  if (audio.paused) audio.play().catch(() => {});
+  else audio.pause();
+});
+
+document.getElementById('skipBackBtn').addEventListener('click', () => {
+  audio.currentTime = Math.max(0, audio.currentTime - 10);
+  updateProgress();
+});
+document.getElementById('skipFwdBtn').addEventListener('click', () => {
+  const dur = isFinite(audio.duration) ? audio.duration : audio.currentTime + 10;
+  audio.currentTime = Math.min(dur, audio.currentTime + 10);
+  updateProgress();
+});
+
+function seekFromEvent(e) {
+  const rect = playerTrack.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  let pct = (clientX - rect.left) / rect.width;
+  pct = Math.min(1, Math.max(0, pct));
+  if (isFinite(audio.duration) && audio.duration > 0) {
+    audio.currentTime = pct * audio.duration;
+    updateProgress();
+  }
+}
+let isSeeking = false;
+playerTrack.addEventListener('mousedown', (e) => { isSeeking = true; seekFromEvent(e); });
+window.addEventListener('mousemove', (e) => { if (isSeeking) seekFromEvent(e); });
+window.addEventListener('mouseup', () => { isSeeking = false; });
+playerTrack.addEventListener('touchstart', (e) => { isSeeking = true; seekFromEvent(e); });
+window.addEventListener('touchmove', (e) => { if (isSeeking) seekFromEvent(e); });
+window.addEventListener('touchend', () => { isSeeking = false; });
 </script>
-
 </body>
 </html>
