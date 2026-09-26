@@ -727,7 +727,7 @@ for (let i = 1; i <= TOTAL_CHAPTERS; i++) {
   chapters.push({
     id: i,
     title: i + ". rész",
-    audio: "audio/" + i + ".mp3",
+    audio: "audio/" + String(i).padStart(2, '0') + ".mp3",
     paragraphs: chapterTexts[i] || null
   });
 }
