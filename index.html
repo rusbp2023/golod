@@ -104,7 +104,7 @@ html, body {
 .reader-view { display: none; }
 .page {
   display: grid;
-  grid-template-columns: 1fr 460px;
+  grid-template-columns: 1fr 400px;
   min-height: 100vh;
 }
 @media (max-width: 860px) {
@@ -118,7 +118,7 @@ html, body {
   justify-content: center;
 }
 .read-inner {
-  max-width: 620px;
+  max-width: 780px;
   width: 100%;
 }
 .back-link {
@@ -151,7 +151,7 @@ html, body {
   font-size: 22px;
   line-height: 1.85;
   color: var(--ink);
-  margin: 0 0 22px 0;
+  margin: 0;
   text-indent: 2em;
 }
 .word {
@@ -170,7 +170,7 @@ html, body {
   position: fixed;
   left: 0;
   bottom: 0;
-  width: calc(100% - 460px);
+  width: calc(100% - 400px);
   background: rgba(20, 23, 26, 0.92);
   backdrop-filter: blur(6px);
   border-top: 1px solid var(--panel-line);
@@ -180,6 +180,7 @@ html, body {
   gap: 16px;
   z-index: 10;
 }
+.audio-player { width: calc(100% - 400px); }
 @media (max-width: 860px) {
   .audio-player { width: 100%; padding: 14px 20px; }
 }
@@ -836,15 +837,20 @@ function render() {
       const row = document.createElement('tr');
 
       const ruCell = document.createElement('td');
-      const ru = document.createElement('p');
-      ru.className = 'entry-ru';
-      ru.textContent = d.lemma || key;
-      ruCell.appendChild(ru);
       if (d.aspect) {
-        const asp = document.createElement('p');
-        asp.className = 'entry-aspect';
-        asp.textContent = 'imperf.: ' + d.aspect.impf + '\nperf.: ' + d.aspect.perf;
-        ruCell.appendChild(asp);
+        const impfP = document.createElement('p');
+        impfP.className = 'entry-ru';
+        impfP.textContent = d.aspect.impf;
+        const perfP = document.createElement('p');
+        perfP.className = 'entry-ru';
+        perfP.textContent = d.aspect.perf;
+        ruCell.appendChild(impfP);
+        ruCell.appendChild(perfP);
+      } else {
+        const ru = document.createElement('p');
+        ru.className = 'entry-ru';
+        ru.textContent = d.lemma || key;
+        ruCell.appendChild(ru);
       }
 
       const huCell = document.createElement('td');
